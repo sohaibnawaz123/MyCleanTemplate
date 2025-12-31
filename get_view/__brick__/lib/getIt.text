@@ -1,0 +1,19 @@
+
+import 'package:{{app.snakeCase()}}/modules/{{module.snakeCase()}}/data/rest_api/{{name.snakeCase()}}_rest_api_repo.dart';
+import 'package:{{app.snakeCase()}}/modules/{{module.snakeCase()}}/domain/repository/{{name.snakeCase()}}_repo.dart';
+import 'package:{{app.snakeCase()}}/modules/{{module.snakeCase()}}/domain/usecase/{{name.snakeCase()}}_use_case.dart';
+import 'package:{{app.snakeCase()}}/modules/{{module.snakeCase()}}/presentation/blocs/{{name.snakeCase()}}/{{name.snakeCase()}}_bloc.dart';
+import 'package:{{app.snakeCase()}}/modules/{{module.snakeCase()}}/presentation/routes/{{name.snakeCase()}}_view_initial_params.dart';
+
+
+// <<<<<<<<<<<<<<<<<<<<<<<  {{name.pascalCase()}}  >>>>>>>>>>>>>>>>>>>>>>>
+
+
+  getIt.registerSingleton<{{name.pascalCase()}}Repo>(
+      {{name.pascalCase()}}RestApiRepo(getIt(),getIt()));
+
+
+  getIt.registerSingleton<{{name.pascalCase()}}UseCase>(
+     {{name.pascalCase()}}UseCase(getIt()));
+
+  getIt.registerFactoryParam<{{name.pascalCase()}}Bloc, {{name.pascalCase()}}ViewInitialParams, dynamic>((params, _) => {{name.pascalCase()}}Bloc(params, getIt()));

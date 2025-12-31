@@ -1,0 +1,7 @@
+import '../../../../tool_bloc/features/{{module.snakeCase()}}/{{name.snakeCase()}}/bloc/{{name.snakeCase()}}_bloc.dart';
+import '../../../../tool_bloc/features/{{module.snakeCase()}}/{{name.snakeCase()}}/{{name.snakeCase()}}_initial_params.dart';
+
+
+// <<<<<<<<<<<<<<<<<<<<<<<  {{name.pascalCase()}}  >>>>>>>>>>>>>>>>>>>>>>>
+
+  getIt.registerFactoryParam<{{name.pascalCase()}}Bloc, {{name.pascalCase()}}ViewInitialParams, dynamic>((params, _) => {{name.pascalCase()}}Bloc(params));
