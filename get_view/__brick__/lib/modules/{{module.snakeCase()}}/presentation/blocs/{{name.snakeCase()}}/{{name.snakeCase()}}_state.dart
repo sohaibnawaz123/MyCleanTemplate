@@ -1,6 +1,6 @@
 part of '{{name.snakeCase()}}_bloc.dart';
 
-class {{name.pascalCase()}}State {
+class {{name.pascalCase()}}State extends Equatable {
   final {{name.pascalCase()}}ViewInitialParams initialParams;
   final ApiResponse<BaseEntity> {{name.camelCase()}}Response;
 
@@ -20,6 +20,9 @@ class {{name.pascalCase()}}State {
     Utils.logInfo(data.toString(), name: "{{name.pascalCase()}}");
     return data;
   }
+
+ @override
+  List<Object?> get props => [initialParams, {{name.camelCase()}}Response];
 
   @override
   String toString() {
