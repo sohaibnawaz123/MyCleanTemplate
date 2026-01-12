@@ -1,20 +1,14 @@
-import 'package:collection/collection.dart';
 
+import 'package:{{app.snakeCase()}}/modules/{{module.snakeCase()}}/domain/params/{{name.snakeCase()}}_param.dart';
 
-class {{name.pascalCase()}}RequestModel {
-  String? userMessage;
-  bool? status;
-
-  {{name.pascalCase()}}RequestModel({this.userMessage, this.status});
-
-  factory {{name.pascalCase()}}RequestModel.fromJson(Map<String, dynamic> json) => {{name.pascalCase()}}RequestModel(
-        userMessage: json['userMessage'] as String?,
-        status: json['status'] as bool?,
-      );
+class {{name.pascalCase()}}RequestModel extends {{name.pascalCase()}}Param {
+  const {{name.pascalCase()}}RequestModel({
+    required super.token,
+    required super.email,
+  });
 
   Map<String, dynamic> toJson() => {
-        'userMessage': userMessage,
-        'status': status,
+        'token': token,
+        'email': email,
       };
-
 }
