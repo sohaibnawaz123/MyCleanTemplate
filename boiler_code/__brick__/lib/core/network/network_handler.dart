@@ -1,12 +1,12 @@
 // import 'package:fpdart/fpdart.dart';
-// import 'package:ng9/core/failures/network_failure.dart';
-// import 'package:ng9/core/network/network.dart';
-// import 'package:ng9/data/network/network.dart';
-// import 'package:ng9/domain/entities/auth/token_refresh_entity.dart';
-// import 'package:ng9/domain/failures/network_failure.dart';
-// import 'package:ng9/domain/usecase/auth/token_refresh_use_case.dart';
-// import 'package:ng9/features/app/app/bloc/bloc/app_bloc.dart';
-// import 'package:ng9/core/utils/utils.dart';
+// import 'package:{{name.snakeCase()}}/core/failures/network_failure.dart';
+// import 'package:{{name.snakeCase()}}/core/network/network.dart';
+// import 'package:{{name.snakeCase()}}/data/network/network.dart';
+// import 'package:{{name.snakeCase()}}/domain/entities/auth/token_refresh_entity.dart';
+// import 'package:{{name.snakeCase()}}/domain/failures/network_failure.dart';
+// import 'package:{{name.snakeCase()}}/domain/usecase/auth/token_refresh_use_case.dart';
+// import 'package:{{name.snakeCase()}}/features/app/app/bloc/bloc/app_bloc.dart';
+// import 'package:{{name.snakeCase()}}/core/utils/utils.dart';
 
 // class NetworkHandler {
 //   final Network network;

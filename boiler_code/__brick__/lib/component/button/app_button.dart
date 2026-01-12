@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:ng9/component/text/content.dart';
-import 'package:ng9/core/resource/app_color.dart';
-import 'package:ng9/core/utils/extension/app_text_style.dart';
+import 'package:{{name.snakeCase()}}/component/text/content.dart';
+import 'package:{{name.snakeCase()}}/core/resource/app_color.dart';
+import 'package:{{name.snakeCase()}}/core/utils/extension/app_text_style.dart';
 
 class AppButton extends StatelessWidget {
   const AppButton({

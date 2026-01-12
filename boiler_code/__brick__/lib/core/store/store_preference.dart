@@ -3,8 +3,8 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:ng9/core/failures/store_failure.dart';
-import 'package:ng9/core/store/store.dart';
+import 'package:{{name.snakeCase()}}/core/failures/store_failure.dart';
+import 'package:{{name.snakeCase()}}/core/store/store.dart';
 
 class StorePreference extends Store {
   static late SharedPreferences _prefs;

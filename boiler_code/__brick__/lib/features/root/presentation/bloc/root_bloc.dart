@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/foundation.dart';
-import 'package:ng9/features/root/presentation/root_initial_params.dart';
+import 'package:{{name.snakeCase()}}/features/root/presentation/root_initial_params.dart';
 
 part 'root_event.dart';
 part 'root_state.dart';

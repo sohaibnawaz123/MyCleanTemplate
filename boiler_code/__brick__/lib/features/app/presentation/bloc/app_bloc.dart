@@ -3,7 +3,7 @@
 // import 'package:fpdart/fpdart.dart';
 // import 'package:meta/meta.dart';
 
-// import 'package:ng9/core/utils/utils.dart';
+// import 'package:{{name.snakeCase()}}/core/utils/utils.dart';
 // import 'package:socket_io_client/socket_io_client.dart' as io;
 
 // part 'app_event.dart';

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:ng9/core/utils/extension/app_padding.dart';
+import 'package:{{name.snakeCase()}}/core/utils/extension/app_padding.dart';
 
 class PageLoading extends StatelessWidget {
   const PageLoading({super.key});

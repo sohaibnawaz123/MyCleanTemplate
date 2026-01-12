@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:fpdart/fpdart.dart';
-import 'package:ng9/core/failures/network_failure.dart';
-import 'package:ng9/core/network/socket/socket_status.dart';
+import 'package:{{name.snakeCase()}}/core/failures/network_failure.dart';
+import 'package:{{name.snakeCase()}}/core/network/socket/socket_status.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
 
 /// Centralized Socket Manager that handles connection lifecycle,

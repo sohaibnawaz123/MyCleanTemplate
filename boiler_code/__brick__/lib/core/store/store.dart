@@ -1,5 +1,5 @@
 import 'package:fpdart/fpdart.dart';
-import 'package:ng9/core/failures/store_failure.dart';
+import 'package:{{name.snakeCase()}}/core/failures/store_failure.dart';
 
 abstract class Store {
   Either<StoreFailure, T> write<T>(String key, T value);

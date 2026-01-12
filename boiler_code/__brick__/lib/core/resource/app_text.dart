@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:ng9/core/utils/extension/app_font_weight.dart';
+import 'package:{{name.snakeCase()}}/core/utils/extension/app_font_weight.dart';
 
 
 class AppText {

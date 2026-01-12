@@ -2,10 +2,10 @@
 // import 'package:flutter_bloc/flutter_bloc.dart';
 // import 'package:flutter_screenutil/flutter_screenutil.dart';
 // import 'package:gif/gif.dart';
-// import 'package:ng9/features/dashboard/dashboard/bloc/dashboard_bloc.dart';
-// import 'package:ng9/features/dashboard/dashboard/constant.dart';
-// import 'package:ng9/resource/app_asset.dart';
-// import 'package:ng9/core/resource/app_color.dart';
+// import 'package:{{name.snakeCase()}}/features/dashboard/dashboard/bloc/dashboard_bloc.dart';
+// import 'package:{{name.snakeCase()}}/features/dashboard/dashboard/constant.dart';
+// import 'package:{{name.snakeCase()}}/resource/app_asset.dart';
+// import 'package:{{name.snakeCase()}}/core/resource/app_color.dart';
 
 
 // class AppAnimatedNavBar extends StatelessWidget {

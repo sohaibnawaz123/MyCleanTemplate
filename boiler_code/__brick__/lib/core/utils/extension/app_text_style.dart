@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:ng9/core/resource/app_color.dart';
-import 'package:ng9/core/resource/app_text.dart';
+import 'package:{{name.snakeCase()}}/core/resource/app_color.dart';
+import 'package:{{name.snakeCase()}}/core/resource/app_text.dart';
 
 extension AppTextStyle on BuildContext {
   bool get isDarkTheme {

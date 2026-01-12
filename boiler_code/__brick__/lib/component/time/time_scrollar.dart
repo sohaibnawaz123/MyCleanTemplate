@@ -3,7 +3,7 @@ library time_picker_spinner;
 import 'package:flutter/material.dart';
 import 'dart:math';
 
-import 'package:ng9/component/text/content.dart';
+import 'package:{{name.snakeCase()}}/component/text/content.dart';
 
 class ItemScrollPhysics extends ScrollPhysics {
   /// Creates physics for snapping to item.

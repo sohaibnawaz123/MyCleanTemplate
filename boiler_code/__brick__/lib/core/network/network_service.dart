@@ -3,8 +3,8 @@ import 'dart:convert';
 import 'package:fpdart/fpdart.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
-import 'package:ng9/core/failures/network_failure.dart';
-import 'package:ng9/core/utils/utils.dart';
+import 'package:{{name.snakeCase()}}/core/failures/network_failure.dart';
+import 'package:{{name.snakeCase()}}/core/utils/utils.dart';
 
 import 'network.dart';
 

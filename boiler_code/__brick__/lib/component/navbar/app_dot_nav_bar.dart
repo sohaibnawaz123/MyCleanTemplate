@@ -1,7 +1,7 @@
 // import 'package:flutter/material.dart';
 // import 'package:flutter_svg/flutter_svg.dart';
-// import 'package:ng9/core/resource/app_color.dart';
-// import 'package:ng9/features/root/presentation/bloc/root_bloc.dart';
+// import 'package:{{name.snakeCase()}}/core/resource/app_color.dart';
+// import 'package:{{name.snakeCase()}}/features/root/presentation/bloc/root_bloc.dart';
 
 
 // class AppDotNavBar extends StatelessWidget {

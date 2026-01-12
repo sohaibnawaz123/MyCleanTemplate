@@ -3,9 +3,9 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:ng9/core/constant/app_url.dart';
-import 'package:ng9/core/resource/app_asset.dart';
-import 'package:ng9/core/resource/app_color.dart';
+import 'package:{{name.snakeCase()}}/core/constant/app_url.dart';
+import 'package:{{name.snakeCase()}}/core/resource/app_asset.dart';
+import 'package:{{name.snakeCase()}}/core/resource/app_color.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 

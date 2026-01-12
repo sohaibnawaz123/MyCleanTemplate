@@ -2,7 +2,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:ng9/core/resource/app_color.dart';
+import 'package:{{name.snakeCase()}}/core/resource/app_color.dart';
 
 
 class Utils {

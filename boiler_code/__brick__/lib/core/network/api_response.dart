@@ -1,5 +1,5 @@
 
-import 'package:ng9/core/network/api_status.dart';
+import 'package:{{name.snakeCase()}}/core/network/api_status.dart';
 
 class ApiResponse<T> {
   final ApiStatus? status;

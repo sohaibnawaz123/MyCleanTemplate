@@ -39,5 +39,5 @@ vars:
   app:
     type: string
     description: Your App name
-    default: ng9
+    default: furkam
     prompt: What is App name?

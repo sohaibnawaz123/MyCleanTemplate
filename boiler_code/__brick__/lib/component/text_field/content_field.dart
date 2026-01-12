@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:ng9/core/resource/app_asset.dart';
-import 'package:ng9/core/resource/app_color.dart';
-import 'package:ng9/core/resource/app_style.dart';
-import 'package:ng9/core/utils/extension/app_padding.dart';
-import 'package:ng9/core/utils/extension/app_text_style.dart';
+import 'package:{{name.snakeCase()}}/core/resource/app_asset.dart';
+import 'package:{{name.snakeCase()}}/core/resource/app_color.dart';
+import 'package:{{name.snakeCase()}}/core/resource/app_style.dart';
+import 'package:{{name.snakeCase()}}/core/utils/extension/app_padding.dart';
+import 'package:{{name.snakeCase()}}/core/utils/extension/app_text_style.dart';
 
 class ContentField extends StatefulWidget {
   const ContentField({
