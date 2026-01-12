@@ -10,24 +10,16 @@ import 'package:{{app.snakeCase()}}/modules/{{module.snakeCase()}}/domain/reposi
 
 
 class {{name.pascalCase()}}RestApiRepo implements {{name.pascalCase()}}Repo {
-  final Network network;
-  final AppUrl appUrl;
-  {{name.pascalCase()}}RestApiRepo(this.network,this.appUrl);
+  final {{name.pascalCase()}}RemoteDataSource _dataSource;
+  {{name.pascalCase()}}RestApiRepo(this._dataSource);
   @override
-  Future<Either<RepoFailure, BaseEntity>> {{name.camelCase()}}({{name.pascalCase()}}Entity data) =>
-      network
-            .get(
-            appUrl.{{name.camelCase()}}Url,
-          query:  data.toJson().$2,
-            ApiHeader.bearerHeaderWithApplicationJson(
-                data.toJson().$1),
-          )
-          .then((value) =>
-              value.fold((l) => left(RepoFailure(error: l.error)), (response) {
-                 try {
-                  return  right(BaseJson.fromJson(response, (_) => null).toDomain((data) => null));
-                } catch (e) {
-                  return left(RepoFailure(error: e.toString()));
-                }
-              }));
+  Future<Either<RepoFailure, BaseEntity<{{name.pascalCase()}}Entity>>> {{name.camelCase()}}({{name.pascalCase()}}Param data) =>
+      _dataSource.get{{name.pascalCase()}}(data).then((value) =>
+          value.fold((l) => left(RepoFailure(error: l.error)), (response) {
+            try {
+              return right(response.toDomain((val) => val.toDomain()));
+            } catch (e) {
+              return left(RepoFailure(error: e.toString()));
+            }
+          }));
 }

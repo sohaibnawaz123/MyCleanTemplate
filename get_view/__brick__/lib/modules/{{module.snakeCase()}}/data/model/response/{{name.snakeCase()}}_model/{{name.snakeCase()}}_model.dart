@@ -1,13 +1,13 @@
 import 'package:collection/collection.dart';
 
 
-class {{name.pascalCase()}}Json {
+class {{name.pascalCase()}}Model {
   String? userMessage;
   bool? status;
 
-  {{name.pascalCase()}}Json({this.userMessage, this.status});
+  {{name.pascalCase()}}Model({this.userMessage, this.status});
 
-  factory {{name.pascalCase()}}Json.fromJson(Map<String, dynamic> json) => {{name.pascalCase()}}Json(
+  factory {{name.pascalCase()}}Model.fromJson(Map<String, dynamic> json) => {{name.pascalCase()}}Model(
         userMessage: json['userMessage'] as String?,
         status: json['status'] as bool?,
       );

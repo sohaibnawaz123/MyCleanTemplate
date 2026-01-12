@@ -2,7 +2,7 @@ part of '{{name.snakeCase()}}_bloc.dart';
 
 class {{name.pascalCase()}}State extends Equatable {
   final {{name.pascalCase()}}ViewInitialParams initialParams;
-  final ApiResponse<BaseEntity> {{name.camelCase()}}Response;
+  final ApiResponse<BaseEntity<{{name.pascalCase()}}Entity>> {{name.camelCase()}}Response;
 
   const {{name.pascalCase()}}State({
     required this.initialParams,
@@ -11,7 +11,7 @@ class {{name.pascalCase()}}State extends Equatable {
 
    {{name.pascalCase()}}State copyWith({
     {{name.pascalCase()}}ViewInitialParams? initialParams,
-    ApiResponse<BaseEntity>? {{name.camelCase()}}Response,
+    ApiResponse<BaseEntity<{{name.pascalCase()}}Entity>>? {{name.camelCase()}}Response,
   }) {
     {{name.pascalCase()}}State data =   {{name.pascalCase()}}State(
       initialParams: initialParams ?? this.initialParams,

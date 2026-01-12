@@ -8,7 +8,7 @@ class {{name.pascalCase()}}UseCase {
   final {{name.pascalCase()}}Repo _repo;
   {{name.pascalCase()}}UseCase(this._repo);
 
-  Future<Either<{{name.pascalCase()}}Failure, BaseEntity>> execute({{name.pascalCase()}}Entity data) async => await _repo.{{name.camelCase()}}(data).then((value) => value.fold(
+  Future<Either<{{name.pascalCase()}}Failure, BaseEntity<{{name.pascalCase()}}Entity>>> execute({{name.pascalCase()}}Param data) async => await _repo.{{name.camelCase()}}(data).then((value) => value.fold(
               (err) => left({{name.pascalCase()}}Failure(error: err.error)),
               (response) => right(response)));
 }

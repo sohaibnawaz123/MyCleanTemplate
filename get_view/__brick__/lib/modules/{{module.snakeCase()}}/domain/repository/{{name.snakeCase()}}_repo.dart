@@ -6,9 +6,6 @@ import 'package:{{app.snakeCase()}}/modules/app/domain/entitties/base_entity.dar
 import 'package:{{app.snakeCase()}}/modules/{{module.snakeCase()}}/domain/entities/{{name.snakeCase()}}_entity.dart';
 
 abstract class {{name.pascalCase()}}Repo {
-  final Network network;
-  final AppUrl appUrl;
 
-  {{name.pascalCase()}}Repo(this.network, this.appUrl);
-  Future<Either<RepoFailure, BaseEntity>> {{name.camelCase()}}({{name.pascalCase()}}Entity data);
+  Future<Either<RepoFailure, BaseEntity<{{name.pascalCase()}}Entity>>> {{name.camelCase()}}({{name.pascalCase()}}Param data);
 }
