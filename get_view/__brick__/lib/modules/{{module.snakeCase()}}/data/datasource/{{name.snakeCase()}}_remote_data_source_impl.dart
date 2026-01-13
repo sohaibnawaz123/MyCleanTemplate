@@ -14,7 +14,7 @@ class {{name.pascalCase()}}RemoteDataSourceImpl implements {{name.pascalCase()}}
   final AppUrl appUrl;
   {{name.pascalCase()}}RemoteDataSourceImpl(this.network,this.appUrl);
   @override
-  Future<Either<RepoFailure, BaseJson<{{name.pascalCase()}}Model>>> get{{name.pascalCase()}}({{name.pascalCase()}}Param data) =>
+  Future<Either<RepoFailure, BaseJson<{{name.pascalCase()}}Model>>> {{name.snakeCase()}}({{name.pascalCase()}}Param data) =>
       network
             .get(
             appUrl.{{name.camelCase()}}Url,
