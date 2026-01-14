@@ -1,16 +1,19 @@
-import 'package:{{app.snakeCase()}}/modules/{{module.snakeCase()}}/data/model/request/{{name.snakeCase()}}_request_model/{{name.snakeCase()}}_request_model.dart';
-
 class {{name.pascalCase()}}Entity {
-  final String token;
-  final String email;
+  final String userMessage;
+  final bool status;
 
   {{name.pascalCase()}}Entity({
-    required this.token,
-    required this.email,
+    required this.userMessage,
+    required this.status,
   });
-  LoginRequestModel toModel() => LoginRequestModel(
-        token: token,
-        email: email,
-      );
- 
+
+  {{name.pascalCase()}}Entity copyWith({
+    String? userMessage,
+    bool? status,
+  }) {
+    return {{name.pascalCase()}}Entity(
+      userMessage: userMessage ?? this.userMessage,
+      status: status ?? this.status,
+    );
+  }
 }

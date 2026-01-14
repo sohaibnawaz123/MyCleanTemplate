@@ -1,4 +1,4 @@
-import 'package:{{app.snakeCase()}}/modules/{{module.snakeCase()}}/data/model/request/{{name.snakeCase()}}_request_model.dart';
+import 'package:{{app.snakeCase()}}/modules/{{module.snakeCase()}}/data/model/request/{{name.snakeCase()}}_request_model/{{name.snakeCase()}}_request_model.dart';
 
 class {{name.pascalCase()}}Param {
   final String token;

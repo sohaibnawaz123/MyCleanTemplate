@@ -39,5 +39,5 @@ vars:
   app:
     type: string
     description: Your App name
-    default: furkam
+    default: servy_app
     prompt: What is App name?
