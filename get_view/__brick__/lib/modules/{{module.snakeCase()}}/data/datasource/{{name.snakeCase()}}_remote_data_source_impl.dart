@@ -3,7 +3,7 @@ import 'package:{{app.snakeCase()}}/core/constant/app_url.dart';
 import 'package:{{app.snakeCase()}}/core/failures/repo_failure.dart';
 import 'package:{{app.snakeCase()}}/core/network/api_header.dart';
 import 'package:{{app.snakeCase()}}/core/network/network.dart';
-import 'package:{{app.snakeCase()}}/features/app/data/models/base_json.dart';
+import 'package:{{app.snakeCase()}}/modules/app/data/models/base_json.dart';
 import 'package:{{app.snakeCase()}}/modules/{{module.snakeCase()}}/data/datasource/{{name.snakeCase()}}_remote_data_source.dart';
 import 'package:{{app.snakeCase()}}/modules/{{module.snakeCase()}}/data/model/response/{{name.snakeCase()}}_model/{{name.snakeCase()}}_model.dart';
 import 'package:{{app.snakeCase()}}/modules/{{module.snakeCase()}}/domain/params/{{name.snakeCase()}}_param.dart';
