@@ -4,6 +4,7 @@
 bricks:
   get_view:
     path: CleanTemplate/get_view
+  post_view:
+    path: CleanTemplate/post_view
   boiler_code:
     path: CleanTemplate/boiler_code
-
