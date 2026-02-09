@@ -8,3 +8,5 @@ bricks:
     path: CleanTemplate/post_view
   boiler_code:
     path: CleanTemplate/boiler_code
+  post_view_model:
+    path: CleanTemplate/post_view_model
