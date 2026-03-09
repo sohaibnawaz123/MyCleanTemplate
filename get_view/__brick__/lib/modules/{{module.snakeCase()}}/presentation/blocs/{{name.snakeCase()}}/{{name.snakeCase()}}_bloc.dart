@@ -2,7 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:{{app.snakeCase()}}/core/network/api_response.dart';
 import 'package:{{app.snakeCase()}}/core/utils/utils.dart';
-import 'package:{{app.snakeCase()}}/modules/app/domain/entitties/base_entity.dart';
+import 'package:{{app.snakeCase()}}/modules/app/domain/entities/base_entity.dart';
 import 'package:{{app.snakeCase()}}/modules/{{module.snakeCase()}}/domain/entities/{{name.snakeCase()}}_entity.dart';
 import 'package:{{app.snakeCase()}}/modules/{{module.snakeCase()}}/domain/params/{{name.snakeCase()}}_param.dart';
 import 'package:{{app.snakeCase()}}/modules/{{module.snakeCase()}}/domain/usecase/{{name.snakeCase()}}_use_case.dart';

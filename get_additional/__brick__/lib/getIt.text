@@ -1,0 +1,161 @@
+import 'package:flutter/material.dart';
+import 'package:{{app.snakeCase()}}/core/constant/app_url.dart';
+import 'package:{{app.snakeCase()}}/core/network/network.dart';
+import 'package:{{app.snakeCase()}}/core/network/network_service.dart';
+import 'package:{{app.snakeCase()}}/modules/{{module.snakeCase()}}/data/datasource/{{name.snakeCase()}}_remote_data_source.dart';
+import 'package:{{app.snakeCase()}}/modules/{{module.snakeCase()}}/data/datasource/{{name.snakeCase()}}_remote_data_source_impl.dart';
+import 'package:{{app.snakeCase()}}/modules/{{module.snakeCase()}}/data/rest_api/{{name.snakeCase()}}_rest_api_repo.dart';
+import 'package:{{app.snakeCase()}}/modules/{{module.snakeCase()}}/domain/repository/{{name.snakeCase()}}_repo.dart';
+import 'package:{{app.snakeCase()}}/modules/{{module.snakeCase()}}/domain/usecase/{{name.snakeCase()}}_use_case.dart';
+import 'package:{{app.snakeCase()}}/modules/{{module.snakeCase()}}/presentation/blocs/{{name.snakeCase()}}/{{name.snakeCase()}}_bloc.dart';
+import 'package:{{app.snakeCase()}}/modules/{{module.snakeCase()}}/presentation/routes/{{name.snakeCase()}}_view_initial_params.dart';
+
+
+  // <<<<<<<<<<<<<<<<<<<<<<<  {{name.pascalCase()}}  >>>>>>>>>>>>>>>>>>>>>>>
+  getIt.registerSingleton<{{name.pascalCase()}}RemoteDataSource>(
+      {{name.pascalCase()}}RemoteDataSourceImpl(getIt(), getIt()));
+
+  getIt.registerSingleton<{{name.pascalCase()}}Repo>(
+      {{name.pascalCase()}}RestApiRepo(getIt()));
+
+  getIt.registerSingleton<{{name.pascalCase()}}UseCase>(
+      {{name.pascalCase()}}UseCase(getIt()));
+
+  getIt.registerFactoryParam<{{name.pascalCase()}}Bloc, {{name.pascalCase()}}ViewInitialParams, dynamic>(
+      (params, _) => {{name.pascalCase()}}Bloc(params, getIt()));
+
+  // <<<<<<<<<<<<<<<<<<<<<<< Data Source  >>>>>>>>>>>>>>>>>>>>>>>
+
+
+    Future<Either<RepoFailure, BaseJson<{{name.pascalCase()}}Model>>> {{name.snakeCase()}}({{name.pascalCase()}}Param data);
+
+
+  // <<<<<<<<<<<<<<<<<<<<<<< Data Source Impl  >>>>>>>>>>>>>>>>>>>>>>>
+
+ @override
+  Future<Either<RepoFailure, BaseJson<{{name.pascalCase()}}Model>>> 
+      {{name.snakeCase()}}({{name.pascalCase()}}Param data) =>
+      network
+          .get(
+            appUrl.{{name.camelCase()}}Url,
+            query: data.toModel().toJson(),
+            ApiHeader.bearerHeaderWithApplicationJson(data.token),
+          )
+          .then(
+            (value) => value.fold(
+              (l) => left(RepoFailure(error: l.error)),
+              (response) {
+                try {
+                  return right(
+                    BaseJson<{{name.pascalCase()}}Model>.fromJson(
+                      response,
+                      (res) =>
+                          {{name.pascalCase()}}Model.fromJson(res['data']),
+                    ),
+                  );
+                } catch (e) {
+                  return left(RepoFailure(error: e.toString()));
+                }
+              },
+            ),
+          );
+
+
+  // <<<<<<<<<<<<<<<<<<<<<<<  Repo  >>>>>>>>>>>>>>>>>>>>>>>
+import 'package:{{app.snakeCase()}}/core/failures/repo_failure.dart';
+import 'package:{{app.snakeCase()}}/modules/app/domain/entities/base_entity.dart';
+import 'package:{{app.snakeCase()}}/modules/{{module.snakeCase()}}/domain/entities/{{name.snakeCase()}}_entity.dart';
+import 'package:{{app.snakeCase()}}/modules/{{module.snakeCase()}}/domain/params/{{name.snakeCase()}}_param.dart';
+
+
+ Future<Either<RepoFailure, BaseEntity<{{name.pascalCase()}}Entity>>> 
+      {{name.camelCase()}}(
+    {{name.pascalCase()}}Param param,
+  );
+
+
+  // <<<<<<<<<<<<<<<<<<<<<<< Rest Api Repo  >>>>>>>>>>>>>>>>>>>>>>>
+
+ @override
+  Future<Either<RepoFailure, BaseEntity<{{name.pascalCase()}}Entity>>> 
+      {{name.camelCase()}}(
+    {{name.pascalCase()}}Param param,
+  ) =>
+      _dataSource.{{name.camelCase()}}(param).then(
+        (value) => value.fold(
+          (l) => left(RepoFailure(error: l.error)),
+          (response) {
+            try {
+              return right(
+                response.toDomain(
+                  (val) => val!.toEntity(),
+                ),
+              );
+            } catch (e) {
+              return left(RepoFailure(error: e.toString()));
+            }
+          },
+        ),
+      );
+
+
+  // <<<<<<<<<<<<<<<<<<<<<<< Usecase  >>>>>>>>>>>>>>>>>>>>>>>
+import 'package:{{app.snakeCase()}}/modules/app/domain/entities/base_entity.dart';
+import 'package:{{app.snakeCase()}}/modules/{{module.snakeCase()}}/domain/entities/{{name.snakeCase()}}_entity.dart';
+import 'package:{{app.snakeCase()}}/modules/{{module.snakeCase()}}/domain/failures/{{name.snakeCase()}}_failure.dart';
+import 'package:{{app.snakeCase()}}/modules/{{module.snakeCase()}}/domain/params/{{name.snakeCase()}}_param.dart';
+import 'package:{{app.snakeCase()}}/modules/{{module.snakeCase()}}/domain/repository/{{name.snakeCase()}}_repo.dart';
+
+Future<
+      Either<
+          {{name.pascalCase()}}Failure,
+          BaseEntity<{{name.pascalCase()}}Entity>>> execute(
+    {{name.pascalCase()}}Param data,
+  ) async {
+    return await _repo.{{name.camelCase()}}(data).then(
+          (value) => value.fold(
+            (err) => left(
+              {{name.pascalCase()}}Failure(error: err.error),
+            ),
+            (response) => right(response),
+          ),
+        );
+  }
+
+  // <<<<<<<<<<<<<<<<<<<<<<< Bloc  >>>>>>>>>>>>>>>>>>>>>>>
+
+    on<Load{{name.pascalCase()}}Event>(_load{{name.pascalCase()}}Action);
+
+
+Future<void> _load{{name.pascalCase()}}Action(
+      Load{{name.pascalCase()}}Event event, Emitter<{{name.pascalCase()}}State> emit) async {
+    emit(state.copyWith({{name.camelCase()}}Response: ApiResponse.loading()));
+    
+    await _useCase.execute(event.param).then((value) => value.fold(
+      (l) {
+        emit(state.copyWith({{name.camelCase()}}Response: ApiResponse.error(l.error)));
+      }, 
+      (r) {
+        emit(state.copyWith({{name.camelCase()}}Response: ApiResponse.completed(r)));
+      },
+    ));
+  }
+  // <<<<<<<<<<<<<<<<<<<<<<< Event  >>>>>>>>>>>>>>>>>>>>>>>
+
+
+  
+   Load{{name.pascalCase()}}Event(this.param);
+
+
+  // <<<<<<<<<<<<<<<<<<<<<<< State  >>>>>>>>>>>>>>>>>>>>>>>
+  final ApiResponse<BaseEntity<{{name.pascalCase()}}Entity>> {{name.camelCase()}}Response;
+
+    this.{{name.camelCase()}}Response = const ApiResponse.init(),
+
+    ApiResponse<BaseEntity<{{name.pascalCase()}}Entity>>? {{name.camelCase()}}Response,
+
+      {{name.camelCase()}}Response: {{name.camelCase()}}Response ?? this.{{name.camelCase()}}Response,
+
+{{name.camelCase()}}Response];
+
+{{name.camelCase()}}Response: ${{{name.camelCase()}}Response.toString()})';

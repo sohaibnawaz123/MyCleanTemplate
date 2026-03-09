@@ -1,5 +1,5 @@
 import 'package:collection/collection.dart';
-import '../../domain/entitties/pagination_entity.dart';
+import '../../domain/entities/pagination_entity.dart';
 
 
 class PaginationJson {

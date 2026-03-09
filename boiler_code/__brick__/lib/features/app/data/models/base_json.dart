@@ -1,5 +1,5 @@
-import '../../domain/entitties/base_entity.dart';
-import '../../domain/entitties/pagination_entity.dart';
+import '../../domain/entities/base_entity.dart';
+import '../../domain/entities/pagination_entity.dart';
 import 'pagination_json.dart';
 
 class BaseJson<T> {
