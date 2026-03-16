@@ -1,4 +1,6 @@
 import 'package:fpdart/fpdart.dart';
+import 'package:{{app.snakeCase()}}/core/network/network_service.dart';
+
 import 'package:{{app.snakeCase()}}/core/constant/app_url.dart';
 import 'package:{{app.snakeCase()}}/core/failures/repo_failure.dart';
 import 'package:{{app.snakeCase()}}/core/network/api_header.dart';
