@@ -23,7 +23,7 @@ class {{name.pascalCase()}}RemoteDataSourceImpl
 
   @override
   Future<Either<RepoFailure, BaseJson<{{name.pascalCase()}}Model>>> 
-      {{name.snakeCase()}}({{name.pascalCase()}}Param data) =>
+      {{name.camelCase()}}({{name.pascalCase()}}Param data) =>
       network
           .get(
             appUrl.{{name.camelCase()}}Url,
