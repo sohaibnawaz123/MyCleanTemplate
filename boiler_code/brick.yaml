@@ -29,5 +29,5 @@ vars:
   name:
     type: string
     description: Your app name
-    default: bbb
+    default: taxi_app
     prompt: What is your app name?

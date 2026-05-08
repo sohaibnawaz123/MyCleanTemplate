@@ -5,7 +5,6 @@ import 'package:{{app.snakeCase()}}/core/constant/app_url.dart';
 import 'package:{{app.snakeCase()}}/core/failures/repo_failure.dart';
 
 import 'package:{{app.snakeCase()}}/core/network/api_header.dart';
-import 'package:{{app.snakeCase()}}/core/network/network_handler.dart';
 import 'package:{{app.snakeCase()}}/modules/app/data/models/base_json.dart';
 import 'package:{{app.snakeCase()}}/modules/{{module.snakeCase()}}/data/datasource/{{name.snakeCase()}}_remote_data_source.dart';
 import 'package:{{app.snakeCase()}}/modules/{{module.snakeCase()}}/data/model/response/{{name.snakeCase()}}_model/{{name.snakeCase()}}_model.dart';
@@ -13,7 +12,7 @@ import 'package:{{app.snakeCase()}}/modules/{{module.snakeCase()}}/domain/params
 
 class {{name.pascalCase()}}RemoteDataSourceImpl
     implements {{name.pascalCase()}}RemoteDataSource {
-  final NetworkHandler network;
+  final NetworkService network;
   final AppUrl appUrl;
 
   {{name.pascalCase()}}RemoteDataSourceImpl(
@@ -26,10 +25,10 @@ class {{name.pascalCase()}}RemoteDataSourceImpl
       {{name.camelCase()}}({{name.pascalCase()}}Param data) =>
       network
           .get(
-            appUrl.{{name.camelCase()}}Url,
+            AppUrl.{{name.camelCase()}}Url,
             query: data.toModel().toJson(),
             ApiHeader.json(),
-        authType: AuthType.cookie,
+        // authType: AuthType.cookie,
           )
           .then(
             (value) => value.fold(
