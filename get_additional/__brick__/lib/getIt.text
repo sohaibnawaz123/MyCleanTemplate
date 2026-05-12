@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:{{app.snakeCase()}}/core/constant/app_url.dart';
-import 'package:{{app.snakeCase()}}/core/network/network.dart';
 import 'package:{{app.snakeCase()}}/core/network/network_service.dart';
 import 'package:{{app.snakeCase()}}/modules/{{module.snakeCase()}}/data/datasource/{{name.snakeCase()}}_remote_data_source.dart';
 import 'package:{{app.snakeCase()}}/modules/{{module.snakeCase()}}/data/datasource/{{name.snakeCase()}}_remote_data_source_impl.dart';
@@ -12,17 +11,25 @@ import 'package:{{app.snakeCase()}}/modules/{{module.snakeCase()}}/presentation/
 
 
   // <<<<<<<<<<<<<<<<<<<<<<<  {{name.pascalCase()}}  >>>>>>>>>>>>>>>>>>>>>>>
-  getIt.registerSingleton<{{name.pascalCase()}}RemoteDataSource>(
-      {{name.pascalCase()}}RemoteDataSourceImpl(getIt(), getIt()));
+  if (!getIt.isRegistered<{{name.pascalCase()}}RemoteDataSource>()) {
+    getIt.registerSingleton<{{name.pascalCase()}}RemoteDataSource>(
+        {{name.pascalCase()}}RemoteDataSourceImpl(getIt(), getIt()));
+  }
 
-  getIt.registerSingleton<{{name.pascalCase()}}Repo>(
-      {{name.pascalCase()}}RestApiRepo(getIt()));
+  if (!getIt.isRegistered<{{name.pascalCase()}}Repo>()) {
+    getIt.registerSingleton<{{name.pascalCase()}}Repo>(
+        {{name.pascalCase()}}RestApiRepo(getIt()));
+  }
 
-  getIt.registerSingleton<{{name.pascalCase()}}UseCase>(
-      {{name.pascalCase()}}UseCase(getIt()));
+  if (!getIt.isRegistered<{{name.pascalCase()}}UseCase>()) {
+    getIt.registerSingleton<{{name.pascalCase()}}UseCase>(
+        {{name.pascalCase()}}UseCase(getIt()));
+  }
 
-  getIt.registerFactoryParam<{{name.pascalCase()}}Bloc, {{name.pascalCase()}}ViewInitialParams, dynamic>(
-      (params, _) => {{name.pascalCase()}}Bloc(params, getIt()));
+  if (!getIt.isRegistered<{{name.pascalCase()}}Bloc>()) {
+    getIt.registerFactoryParam<{{name.pascalCase()}}Bloc, {{name.pascalCase()}}ViewInitialParams, dynamic>(
+        (params, _) => {{name.pascalCase()}}Bloc(params, getIt()));
+  }
 
   // <<<<<<<<<<<<<<<<<<<<<<< Data Source  >>>>>>>>>>>>>>>>>>>>>>>
 

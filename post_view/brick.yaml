@@ -39,5 +39,5 @@ vars:
   app:
     type: string
     description: Your App name
-    default: servy_app
+    default: taxi_app
     prompt: What is App name?

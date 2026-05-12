@@ -3,7 +3,6 @@ import 'package:{{app.snakeCase()}}/core/network/network_service.dart';
 
 import 'package:{{app.snakeCase()}}/core/constant/app_url.dart';
 import 'package:{{app.snakeCase()}}/core/failures/repo_failure.dart';
-
 import 'package:{{app.snakeCase()}}/core/network/api_header.dart';
 import 'package:{{app.snakeCase()}}/modules/app/data/models/base_json.dart';
 import 'package:{{app.snakeCase()}}/modules/{{module.snakeCase()}}/data/datasource/{{name.snakeCase()}}_remote_data_source.dart';
@@ -26,8 +25,8 @@ class {{name.pascalCase()}}RemoteDataSourceImpl
       network
           .get(
             AppUrl.{{name.camelCase()}}Url,
-            query: data.toModel().toJson(),
             ApiHeader.json(),
+            query: data.toModel().toJson(),
         // authType: AuthType.cookie,
           )
           .then(
