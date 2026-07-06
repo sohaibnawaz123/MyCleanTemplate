@@ -3,10 +3,8 @@
 # To learn more, visit https://docs.brickhub.dev.
 bricks:
   get_view:
-    path: CleanTemplate/get_view
+    path: MyCleanTemplate/get_view
   post_view:
-    path: CleanTemplate/post_view
+    path: MyCleanTemplate/get_view
   boiler_code:
-    path: CleanTemplate/boiler_code
-  post_view_model:
-    path: CleanTemplate/post_view_model
+    path: MyCleanTemplate/boiler_code
