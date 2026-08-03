@@ -4,6 +4,8 @@ import 'package:fpdart/fpdart.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 import 'package:{{name.snakeCase()}}/core/failures/network_failure.dart';
+import 'package:{{name.snakeCase()}}/core/network/auth_type.dart';
+import 'package:{{name.snakeCase()}}/core/network/network_response.dart';
 import 'package:{{name.snakeCase()}}/core/utils/utils.dart';
 
 import 'network.dart';
@@ -13,9 +15,6 @@ class NetworkService extends Network {
 
   NetworkService({http.Client? client}) : _client = client ?? http.Client();
 
-  // -------------------------------------------------------------------------
-  // Helper: build final Uri
-  // -------------------------------------------------------------------------
   Uri _buildUri(
     String base, {
     String? pathVariable,
@@ -27,27 +26,31 @@ class NetworkService extends Network {
     }
     final uri = Uri.parse(url);
     return query != null && query.isNotEmpty
-        ? uri.replace(queryParameters: query)
+        ? uri.replace(
+            queryParameters: query.map(
+              (key, value) => MapEntry(key, value.toString()),
+            ),
+          )
         : uri;
   }
 
-  // -------------------------------------------------------------------------
-  // Helper: JSON request (GET / POST / PATCH / PUT / DELETE)
-  // -------------------------------------------------------------------------
-  Future<Either<NetworkFailure, dynamic>> _request({
+  Future<Either<NetworkFailure, NetworkResponse<dynamic>>> _request({
     required String method,
     required String url,
     Map<String, dynamic>? body,
     Map<String, String>? header,
     Map<String, dynamic>? query,
     String? pathVariable,
+    AuthType? authType,
   }) async {
     final uri = _buildUri(url, pathVariable: pathVariable, query: query);
-    final headers = header ?? {};
+    final headers = header ?? <String, String>{};
 
-    Utils.logInfo(uri.toString(), name: "$method URI");
-    Utils.logInfo(headers.toString(), name: "$method Headers");
-    if (body != null) Utils.logInfo(body.toString(), name: "$method Body");
+    Utils.logInfo(uri.toString(), name: '$method URI');
+    Utils.logInfo(headers.toString(), name: '$method Headers');
+    if (body != null) {
+      Utils.logInfo(body.toString(), name: '$method Body');
+    }
 
     try {
       final response = await _sendRequest(
@@ -58,11 +61,19 @@ class NetworkService extends Network {
       );
 
       final failure = _handleError(response);
-      if (failure != null) return left(failure);
+      if (failure != null) {
+        return left(failure);
+      }
 
       final decoded = _decodeBody(response);
-      Utils.logInfo(decoded.toString(), name: "$method Response");
-      return right(decoded);
+      Utils.logInfo(decoded.toString(), name: '$method Response');
+      return right(
+        NetworkResponse<dynamic>(
+          data: decoded,
+          statusCode: response.statusCode,
+          headers: response.headers,
+        ),
+      );
     } catch (e, st) {
       Utils.logError('$e\n$st', name: 'Network Failure');
       return left(NetworkFailure('Network Failure', e.toString()));
@@ -87,44 +98,43 @@ class NetworkService extends Network {
     try {
       return await send().timeout(const Duration(seconds: 30));
     } on http.ClientException {
-      if (method != 'GET') rethrow;
+      if (method != 'GET') {
+        rethrow;
+      }
       await Future<void>.delayed(const Duration(milliseconds: 500));
       return send().timeout(const Duration(seconds: 30));
     }
   }
 
-  // -------------------------------------------------------------------------
-  // Helper: Multipart request (POST / PATCH / PUT)
-  // -------------------------------------------------------------------------
-  Future<Either<NetworkFailure, dynamic>> _multipartRequest({
+  Future<Either<NetworkFailure, NetworkResponse<dynamic>>> _multipartRequest({
     required String method,
     required String url,
     required Map<String, dynamic> data,
     required Map<String, dynamic> file,
     Map<String, String>? header,
+    Map<String, dynamic>? query,
     String? pathVariable,
+    AuthType? authType,
   }) async {
-    final uri = _buildUri(url, pathVariable: pathVariable);
-    final headers = header ?? {};
+    final uri = _buildUri(url, pathVariable: pathVariable, query: query);
+    final headers = header ?? <String, String>{};
 
-    Utils.logInfo(uri.toString(), name: "$method Multipart URI");
-    Utils.logInfo(headers.toString(), name: "$method Headers");
-    Utils.logInfo(data.toString(), name: "$method Data");
-    Utils.logInfo(file.toString(), name: "$method Files");
+    Utils.logInfo(uri.toString(), name: '$method Multipart URI');
+    Utils.logInfo(headers.toString(), name: '$method Headers');
+    Utils.logInfo(data.toString(), name: '$method Data');
+    Utils.logInfo(file.toString(), name: '$method Files');
 
     try {
       final request = http.MultipartRequest(method, uri)
         ..headers.addAll(headers);
 
-      // Add text fields
       data.forEach((k, v) {
         request.fields[k] = v is List ? jsonEncode(v) : v.toString();
       });
 
-      // Add files (supports single file or list of files per key)
       if (file.isNotEmpty) {
-        await Future.forEach(file.entries, (
-          MapEntry<String, dynamic> entry,
+        await Future.forEach<MapEntry<String, dynamic>>(file.entries, (
+          entry,
         ) async {
           final key = entry.key;
           final value = entry.value;
@@ -145,11 +155,19 @@ class NetworkService extends Network {
       final response = await http.Response.fromStream(streamed);
 
       final failure = _handleError(response);
-      if (failure != null) return left(failure);
+      if (failure != null) {
+        return left(failure);
+      }
 
       final decoded = _decodeBody(response);
-      Utils.logInfo(decoded.toString(), name: "$method Multipart Response");
-      return right(decoded);
+      Utils.logInfo(decoded.toString(), name: '$method Multipart Response');
+      return right(
+        NetworkResponse<dynamic>(
+          data: decoded,
+          statusCode: response.statusCode,
+          headers: response.headers,
+        ),
+      );
     } catch (e, st) {
       Utils.logError('$e\n$st', name: 'Network Failure');
       return left(NetworkFailure('Network Failure', e.toString()));
@@ -170,130 +188,171 @@ class NetworkService extends Network {
     );
   }
 
-  // -------------------------------------------------------------------------
-  // Public API – Header is now optional
-  // -------------------------------------------------------------------------
   @override
-  Future<Either<NetworkFailure, dynamic>> get(
+  Future<Either<NetworkFailure, NetworkResponse<dynamic>>> get(
     String url,
     Map<String, String>? header, {
     Map<String, dynamic>? query,
     String? pathVariable,
+    AuthType? authType,
   }) => _request(
     method: 'GET',
     url: url,
     header: header,
     query: query,
     pathVariable: pathVariable,
+    authType: authType,
   );
 
   @override
-  Future<Either<NetworkFailure, dynamic>> post(
+  Future<Either<NetworkFailure, NetworkResponse<dynamic>>> post(
     String url,
     Map<String, dynamic> data,
     Map<String, String>? header, {
+    Map<String, dynamic>? query,
     String? pathVariable,
+    AuthType? authType,
   }) => _request(
     method: 'POST',
     url: url,
     body: data,
     header: header,
+    query: query,
     pathVariable: pathVariable,
+    authType: authType,
   );
 
   @override
-  Future<Either<NetworkFailure, dynamic>> patch(
+  Future<Either<NetworkFailure, NetworkResponse<dynamic>>> patch(
     String url,
     Map<String, dynamic> data,
     Map<String, String>? header, {
+    Map<String, dynamic>? query,
     String? pathVariable,
+    AuthType? authType,
   }) => _request(
     method: 'PATCH',
     url: url,
     body: data,
     header: header,
+    query: query,
     pathVariable: pathVariable,
+    authType: authType,
   );
 
   @override
-  Future<Either<NetworkFailure, dynamic>> put(
+  Future<Either<NetworkFailure, NetworkResponse<dynamic>>> put(
     String url,
     Map<String, dynamic> data,
     Map<String, String>? header, {
+    Map<String, dynamic>? query,
     String? pathVariable,
+    AuthType? authType,
   }) => _request(
     method: 'PUT',
     url: url,
     body: data,
     header: header,
+    query: query,
     pathVariable: pathVariable,
+    authType: authType,
   );
 
   @override
-  Future<Either<NetworkFailure, dynamic>> postFile(
+  Future<Either<NetworkFailure, NetworkResponse<dynamic>>> postFile(
     String url,
     Map<String, dynamic> data,
     Map<String, dynamic> file,
     Map<String, String>? header, {
+    Map<String, dynamic>? query,
     String? pathVariable,
+    AuthType? authType,
   }) => _multipartRequest(
     method: 'POST',
     url: url,
     data: data,
     file: file,
     header: header,
+    query: query,
     pathVariable: pathVariable,
+    authType: authType,
   );
 
   @override
-  Future<Either<NetworkFailure, dynamic>> patchFile(
+  Future<Either<NetworkFailure, NetworkResponse<dynamic>>> patchFile(
     String url,
     Map<String, dynamic> data,
     Map<String, dynamic> file,
     Map<String, String>? header, {
+    Map<String, dynamic>? query,
     String? pathVariable,
+    AuthType? authType,
   }) => _multipartRequest(
     method: 'PATCH',
     url: url,
     data: data,
     file: file,
     header: header,
+    query: query,
     pathVariable: pathVariable,
+    authType: authType,
   );
 
   @override
-  Future<Either<NetworkFailure, dynamic>> putFile(
+  Future<Either<NetworkFailure, NetworkResponse<dynamic>>> putFile(
     String url,
     Map<String, dynamic> data,
     Map<String, dynamic> file,
     Map<String, String>? header, {
+    Map<String, dynamic>? query,
     String? pathVariable,
+    AuthType? authType,
   }) => _multipartRequest(
     method: 'PUT',
     url: url,
     data: data,
     file: file,
     header: header,
+    query: query,
     pathVariable: pathVariable,
+    authType: authType,
   );
 
   @override
-  Future<Either<NetworkFailure, dynamic>> delete(
+  Future<Either<NetworkFailure, NetworkResponse<dynamic>>> putBinary(
+    String url,
+    String filePath,
+    Map<String, String>? header, {
+    Map<String, dynamic>? query,
+    String? pathVariable,
+    AuthType? authType,
+  }) => _multipartRequest(
+    method: 'PUT',
+    url: url,
+    data: const <String, dynamic>{},
+    file: <String, dynamic>{'file': filePath},
+    header: header,
+    query: query,
+    pathVariable: pathVariable,
+    authType: authType,
+  );
+
+  @override
+  Future<Either<NetworkFailure, NetworkResponse<dynamic>>> delete(
     String url,
     Map<String, String>? header, {
     Map<String, dynamic>? query,
     String? pathVariable,
+    AuthType? authType,
   }) => _request(
     method: 'DELETE',
     url: url,
     header: header,
     query: query,
     pathVariable: pathVariable,
+    authType: authType,
   );
 
-  // -------------------------------------------------------------------------
-  // Private utilities
-  // -------------------------------------------------------------------------
   MediaType _mediaType(String filePath) {
     final ext = filePath.split('.').last.toLowerCase();
     return switch (ext) {
@@ -332,11 +391,13 @@ class NetworkService extends Network {
   }
 
   dynamic _decodeBody(http.Response response) {
-    if (response.body.isEmpty) return {};
+    if (response.body.isEmpty) {
+      return {};
+    }
     try {
       return jsonDecode(response.body);
     } catch (_) {
-      return response.body; // fallback for plain text
+      return response.body;
     }
   }
 }

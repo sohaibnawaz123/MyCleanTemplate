@@ -1,266 +1,370 @@
-// import 'package:fpdart/fpdart.dart';
-// import 'package:{{name.snakeCase()}}/core/failures/network_failure.dart';
-// import 'package:{{name.snakeCase()}}/core/network/network.dart';
-// import 'package:{{name.snakeCase()}}/data/network/network.dart';
-// import 'package:{{name.snakeCase()}}/domain/entities/auth/token_refresh_entity.dart';
-// import 'package:{{name.snakeCase()}}/domain/failures/network_failure.dart';
-// import 'package:{{name.snakeCase()}}/domain/usecase/auth/token_refresh_use_case.dart';
-// import 'package:{{name.snakeCase()}}/features/app/app/bloc/bloc/app_bloc.dart';
-// import 'package:{{name.snakeCase()}}/core/utils/utils.dart';
+import 'package:fpdart/fpdart.dart';
+import 'package:{{name.snakeCase()}}/core/failures/network_failure.dart';
+import 'package:{{name.snakeCase()}}/core/network/auth_type.dart';
+import 'package:{{name.snakeCase()}}/core/network/network.dart';
+import 'package:{{name.snakeCase()}}/core/network/network_response.dart';
+import 'package:{{name.snakeCase()}}/core/network/session_invalidation_handler.dart';
+import 'package:{{name.snakeCase()}}/core/utils/utils.dart';
+import 'package:{{name.snakeCase()}}/domain/repository/auth_repo.dart';
 
-// class NetworkHandler {
-//   final Network network;
-//   final TokenRefreshUseCase refreshUseCase;
-//   final AppBloc appBloc;
-//   NetworkHandler(this.network, this.refreshUseCase, this.appBloc);
+class NetworkHandler {
+  final Network network;
+  final AuthRepo authRepo;
+  final SessionInvalidationHandler sessionInvalidationHandler;
 
-//   Future<Either<NetworkFailure, dynamic>> get(
-//     String url,
-//     Map<String, String>? header, {
-//     Map<String, dynamic>? query,
-//     String? pathVariable,
-//   }) async {
-//     final result = await network.get(
-//       url,
-//       header,
-//       query: query,
-//       pathVariable: pathVariable,
-//     );
-//     return await result.fold(
-//       (l) => _handleTokenRefreshAndRetry(
-//         (updatedHeader) => network.get(
-//           url,
-//           updatedHeader,
-//           query: query,
-//           pathVariable: pathVariable,
-//         ),
-//         l,
-//         header,
-//       ),
-//       (response) async => right(response),
-//     );
-//   }
+  NetworkHandler(this.network, this.authRepo, this.sessionInvalidationHandler);
 
-//   Future<Either<NetworkFailure, dynamic>> post(
-//     String url,
-//     Map<String, dynamic> data,
-//     Map<String, String>? header, {
-//     String? pathVariable,
-//   }) async {
-//     final result = await network.post(
-//       url,
-//       data,
-//       header,
-//       pathVariable: pathVariable,
-//     );
-//     return await result.fold(
-//       (l) => _handleTokenRefreshAndRetry(
-//         (updatedHeader) =>
-//             network.post(url, data, updatedHeader, pathVariable: pathVariable),
-//         l,
-//         header,
-//       ),
-//       (response) async => right(response),
-//     );
-//   }
+  Future<void> _logout() => sessionInvalidationHandler.invalidateSession();
 
-//   Future<Either<NetworkFailure, dynamic>> patch(
-//     String url,
-//     Map<String, dynamic> data,
-//     Map<String, String>? header, {
-//     String? pathVariable,
-//   }) async {
-//     final result = await network.patch(
-//       url,
-//       data,
-//       header,
-//       pathVariable: pathVariable,
-//     );
-//     return await result.fold(
-//       (l) => _handleTokenRefreshAndRetry(
-//         (updatedHeader) =>
-//             network.patch(url, data, updatedHeader, pathVariable: pathVariable),
-//         l,
-//         header,
-//       ),
-//       (response) async => right(response),
-//     );
-//   }
+  Future<Either<NetworkFailure, NetworkResponse<dynamic>>> get(
+    String url,
+    Map<String, String>? header, {
+    Map<String, dynamic>? query,
+    String? pathVariable,
+    AuthType? authType = AuthType.none,
+  }) async {
+    final result = await network.get(
+      url,
+      header,
+      query: query,
+      pathVariable: pathVariable,
+      authType: authType,
+    );
+    return result.fold(
+      (l) => _handleTokenRefreshAndRetry(
+        (updatedHeader) => network.get(
+          url,
+          updatedHeader,
+          query: query,
+          pathVariable: pathVariable,
+          authType: authType,
+        ),
+        l,
+        header,
+        authType,
+      ),
+      (response) async => right(response),
+    );
+  }
 
-//   Future<Either<NetworkFailure, dynamic>> put(
-//     String url,
-//     Map<String, dynamic> data,
-//     Map<String, String>? header, {
-//     String? pathVariable,
-//   }) async {
-//     final result = await network.put(
-//       url,
-//       data,
-//       header,
-//       pathVariable: pathVariable,
-//     );
-//     return await result.fold(
-//       (l) => _handleTokenRefreshAndRetry(
-//         (updatedHeader) =>
-//             network.put(url, data, updatedHeader, pathVariable: pathVariable),
-//         l,
-//         header,
-//       ),
-//       (response) async => right(response),
-//     );
-//   }
+  Future<Either<NetworkFailure, NetworkResponse<dynamic>>> post(
+    String url,
+    Map<String, dynamic> data,
+    Map<String, String>? header, {
+    Map<String, dynamic>? query,
+    String? pathVariable,
+    AuthType? authType = AuthType.none,
+  }) async {
+    final result = await network.post(
+      url,
+      data,
+      header,
+      query: query,
+      pathVariable: pathVariable,
+      authType: authType,
+    );
+    return result.fold(
+      (l) => _handleTokenRefreshAndRetry(
+        (updatedHeader) => network.post(
+          url,
+          data,
+          updatedHeader,
+          query: query,
+          pathVariable: pathVariable,
+          authType: authType,
+        ),
+        l,
+        header,
+        authType,
+      ),
+      (response) async => right(response),
+    );
+  }
 
-//   Future<Either<NetworkFailure, dynamic>> postFile(
-//     String url,
-//     Map<String, dynamic> data,
-//     Map<String, dynamic> file,
-//     Map<String, String>? header, {
-//     String? pathVariable,
-//   }) async {
-//     final result = await network.postFile(
-//       url,
-//       data,
-//       file,
-//       header,
-//       pathVariable: pathVariable,
-//     );
-//     return await result.fold(
-//       (l) => _handleTokenRefreshAndRetry(
-//         (updatedHeader) => network.postFile(
-//           url,
-//           data,
-//           file,
-//           updatedHeader,
-//           pathVariable: pathVariable,
-//         ),
-//         l,
-//         header,
-//       ),
-//       (response) async => right(response),
-//     );
-//   }
+  Future<Either<NetworkFailure, NetworkResponse<dynamic>>> patch(
+    String url,
+    Map<String, dynamic> data,
+    Map<String, String>? header, {
+    Map<String, dynamic>? query,
+    String? pathVariable,
+    AuthType? authType = AuthType.none,
+  }) async {
+    final result = await network.patch(
+      url,
+      data,
+      header,
+      query: query,
+      pathVariable: pathVariable,
+      authType: authType,
+    );
+    return result.fold(
+      (l) => _handleTokenRefreshAndRetry(
+        (updatedHeader) => network.patch(
+          url,
+          data,
+          updatedHeader,
+          query: query,
+          pathVariable: pathVariable,
+          authType: authType,
+        ),
+        l,
+        header,
+        authType,
+      ),
+      (response) async => right(response),
+    );
+  }
 
-//   Future<Either<NetworkFailure, dynamic>> patchFile(
-//     String url,
-//     Map<String, dynamic> data,
-//     Map<String, dynamic> file,
-//     Map<String, String>? header, {
-//     String? pathVariable,
-//   }) async {
-//     final result = await network.patchFile(
-//       url,
-//       data,
-//       file,
-//       header,
-//       pathVariable: pathVariable,
-//     );
-//     return await result.fold(
-//       (l) => _handleTokenRefreshAndRetry(
-//         (updatedHeader) => network.patchFile(
-//           url,
-//           data,
-//           file,
-//           updatedHeader,
-//           pathVariable: pathVariable,
-//         ),
-//         l,
-//         header,
-//       ),
-//       (response) async => right(response),
-//     );
-//   }
+  Future<Either<NetworkFailure, NetworkResponse<dynamic>>> put(
+    String url,
+    Map<String, dynamic> data,
+    Map<String, String>? header, {
+    Map<String, dynamic>? query,
+    String? pathVariable,
+    AuthType? authType = AuthType.none,
+  }) async {
+    final result = await network.put(
+      url,
+      data,
+      header,
+      query: query,
+      pathVariable: pathVariable,
+      authType: authType,
+    );
+    return result.fold(
+      (l) => _handleTokenRefreshAndRetry(
+        (updatedHeader) => network.put(
+          url,
+          data,
+          updatedHeader,
+          query: query,
+          pathVariable: pathVariable,
+          authType: authType,
+        ),
+        l,
+        header,
+        authType,
+      ),
+      (response) async => right(response),
+    );
+  }
 
-//   Future<Either<NetworkFailure, dynamic>> putFile(
-//     String url,
-//     Map<String, dynamic> data,
-//     Map<String, dynamic> file,
-//     Map<String, String>? header, {
-//     String? pathVariable,
-//   }) async {
-//     final result = await network.putFile(
-//       url,
-//       data,
-//       file,
-//       header,
-//       pathVariable: pathVariable,
-//     );
-//     return await result.fold(
-//       (l) => _handleTokenRefreshAndRetry(
-//         (updatedHeader) => network.putFile(
-//           url,
-//           data,
-//           file,
-//           updatedHeader,
-//           pathVariable: pathVariable,
-//         ),
-//         l,
-//         header,
-//       ),
-//       (response) async => right(response),
-//     );
-//   }
+  Future<Either<NetworkFailure, NetworkResponse<dynamic>>> postFile(
+    String url,
+    Map<String, dynamic> data,
+    Map<String, dynamic> file,
+    Map<String, String>? header, {
+    Map<String, dynamic>? query,
+    String? pathVariable,
+    AuthType? authType = AuthType.none,
+  }) async {
+    final result = await network.postFile(
+      url,
+      data,
+      file,
+      header,
+      query: query,
+      pathVariable: pathVariable,
+      authType: authType,
+    );
+    return result.fold(
+      (l) => _handleTokenRefreshAndRetry(
+        (updatedHeader) => network.postFile(
+          url,
+          data,
+          file,
+          updatedHeader,
+          query: query,
+          pathVariable: pathVariable,
+          authType: authType,
+        ),
+        l,
+        header,
+        authType,
+      ),
+      (response) async => right(response),
+    );
+  }
 
-//   Future<Either<NetworkFailure, dynamic>> delete(
-//     String url,
-//     Map<String, String>? header, {
-//     Map<String, dynamic>? query,
-//     String? pathVariable,
-//   }) async {
-//     final result = await network.delete(
-//       url,
-//       header,
-//       query: query,
-//       pathVariable: pathVariable,
-//     );
-//     return await result.fold(
-//       (l) => _handleTokenRefreshAndRetry(
-//         (updatedHeader) => network.delete(
-//           url,
-//           updatedHeader,
-//           query: query,
-//           pathVariable: pathVariable,
-//         ),
-//         l,
-//         header,
-//       ),
-//       (response) async => right(response),
-//     );
-//   }
+  Future<Either<NetworkFailure, NetworkResponse<dynamic>>> patchFile(
+    String url,
+    Map<String, dynamic> data,
+    Map<String, dynamic> file,
+    Map<String, String>? header, {
+    Map<String, dynamic>? query,
+    String? pathVariable,
+    AuthType? authType = AuthType.none,
+  }) async {
+    final result = await network.patchFile(
+      url,
+      data,
+      file,
+      header,
+      query: query,
+      pathVariable: pathVariable,
+      authType: authType,
+    );
+    return result.fold(
+      (l) => _handleTokenRefreshAndRetry(
+        (updatedHeader) => network.patchFile(
+          url,
+          data,
+          file,
+          updatedHeader,
+          query: query,
+          pathVariable: pathVariable,
+          authType: authType,
+        ),
+        l,
+        header,
+        authType,
+      ),
+      (response) async => right(response),
+    );
+  }
 
-//   Future<Either<NetworkFailure, dynamic>> _handleTokenRefreshAndRetry(
-//     Future<Either<NetworkFailure, dynamic>> Function(
-//       Map<String, String>? header,
-//     )
-//     request,
-//     NetworkFailure failure,
-//     Map<String, String>? header,
-//   ) async {
-//     if (failure.error == 'Invalid or Expired Token') {
-//       final refreshResult = await refreshUseCase.execute(
-//         TokenRefreshEntity(refreshToken: appBloc.state.user.refreshToken),
-//       );
+  Future<Either<NetworkFailure, NetworkResponse<dynamic>>> putFile(
+    String url,
+    Map<String, dynamic> data,
+    Map<String, dynamic> file,
+    Map<String, String>? header, {
+    Map<String, dynamic>? query,
+    String? pathVariable,
+    AuthType? authType = AuthType.none,
+  }) async {
+    final result = await network.putFile(
+      url,
+      data,
+      file,
+      header,
+      query: query,
+      pathVariable: pathVariable,
+      authType: authType,
+    );
+    return result.fold(
+      (l) => _handleTokenRefreshAndRetry(
+        (updatedHeader) => network.putFile(
+          url,
+          data,
+          file,
+          updatedHeader,
+          query: query,
+          pathVariable: pathVariable,
+          authType: authType,
+        ),
+        l,
+        header,
+        authType,
+      ),
+      (response) async => right(response),
+    );
+  }
 
-//       return await refreshResult.fold(
-//         (error) => left(NetworkFailure(error.error)),
-//         (refreshData) async {
-//           appBloc.add(UpdateLocalUserTokenEvent(refreshData.data));
-//           header?['Authorization'] = "Bearer ${refreshData.data.accessToken}";
-//           Utils.logInfo(header.toString(), name: "Updated Header");
+  Future<Either<NetworkFailure, NetworkResponse<dynamic>>> putBinary(
+    String url,
+    String filePath,
+    Map<String, String>? header, {
+    Map<String, dynamic>? query,
+    String? pathVariable,
+    AuthType? authType = AuthType.none,
+  }) async {
+    final result = await network.putBinary(
+      url,
+      filePath,
+      header,
+      query: query,
+      pathVariable: pathVariable,
+      authType: authType,
+    );
+    return result.fold(
+      (l) => _handleTokenRefreshAndRetry(
+        (updatedHeader) => network.putBinary(
+          url,
+          filePath,
+          updatedHeader,
+          query: query,
+          pathVariable: pathVariable,
+          authType: authType,
+        ),
+        l,
+        header,
+        authType,
+      ),
+      (response) async => right(response),
+    );
+  }
 
-//           final retryResult = await request(header);
-//           return retryResult.fold((err) {
-//             if (err.runtimeType == UnAuthorizedFailure) {
-//               appBloc.add(DeleteUserEvent());
-//             }
-//             return left(NetworkFailure(err.error));
-//           }, (v) => right(v));
-//         },
-//       );
-//     } else {
-//       if (failure.runtimeType == UnAuthorizedFailure) {
-//         appBloc.add(DeleteUserEvent());
-//       }
-//       return left(NetworkFailure(failure.error.toString()));
-//     }
-//   }
-// }
+  Future<Either<NetworkFailure, NetworkResponse<dynamic>>> delete(
+    String url,
+    Map<String, String>? header, {
+    Map<String, dynamic>? query,
+    String? pathVariable,
+    AuthType? authType = AuthType.none,
+  }) async {
+    final result = await network.delete(
+      url,
+      header,
+      query: query,
+      pathVariable: pathVariable,
+      authType: authType,
+    );
+    return result.fold(
+      (l) => _handleTokenRefreshAndRetry(
+        (updatedHeader) => network.delete(
+          url,
+          updatedHeader,
+          query: query,
+          pathVariable: pathVariable,
+          authType: authType,
+        ),
+        l,
+        header,
+        authType,
+      ),
+      (response) async => right(response),
+    );
+  }
+
+  Future<Either<NetworkFailure, NetworkResponse<dynamic>>>
+  _handleTokenRefreshAndRetry(
+    Future<Either<NetworkFailure, NetworkResponse<dynamic>>> Function(
+      Map<String, String>? header,
+    )
+    request,
+    NetworkFailure failure,
+    Map<String, String>? header,
+    AuthType? authType,
+  ) async {
+    if ((failure is UnAuthorizedFailure) &&
+        (authType == AuthType.cookie || authType == AuthType.refreshCookie)) {
+      final refreshResult = await authRepo.refreshToken();
+
+      return refreshResult.fold(
+        (error) async {
+          Utils.logError(
+            'Logout because token refresh failed 1: ${error.error}, msg: ${error.message}',
+          );
+
+          if (error.message == 'Unauthorized') {
+            await _logout();
+          }
+          return left(NetworkFailure(error.error, error.message));
+        },
+        (refreshData) async {
+          final retryResult = await request(header);
+          return retryResult.fold((err) async {
+            if (err is UnAuthorizedFailure) {
+              Utils.logError(
+                'Logout because token refresh failed 2: ${err.error}',
+              );
+              await _logout();
+            }
+            return left(NetworkFailure(err.error, err.message));
+          }, (v) => right(v));
+        },
+      );
+    } else {
+      return left(NetworkFailure(failure.error.toString(), failure.message));
+    }
+  }
+}

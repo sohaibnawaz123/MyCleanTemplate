@@ -1,58 +1,89 @@
 import 'package:fpdart/fpdart.dart';
+import 'package:{{name.snakeCase()}}/core/network/auth_type.dart';
+import 'package:{{name.snakeCase()}}/core/network/network_response.dart';
 
 import '../failures/network_failure.dart';
 
 abstract class Network {
-  Future<Either<NetworkFailure, dynamic>> get(
+  Future<Either<NetworkFailure, NetworkResponse<dynamic>>> get(
     String url,
     Map<String, String>? header, {
     Map<String, dynamic>? query,
     String? pathVariable,
-  });
-  Future<Either<NetworkFailure, dynamic>> post(
-    String url,
-    Map<String, dynamic> data,
-    Map<String, String>? header, {
-    String? pathVariable,
-  });
-  Future<Either<NetworkFailure, dynamic>> patch(
-    String url,
-    Map<String, dynamic> data,
-    Map<String, String>? header, {
-    String? pathVariable,
-  });
-  Future<Either<NetworkFailure, dynamic>> put(
-    String url,
-    Map<String, dynamic> data,
-    Map<String, String>? header, {
-    String? pathVariable,
-  });
-  Future<Either<NetworkFailure, dynamic>> postFile(
-    String url,
-    Map<String, dynamic> data,
-    Map<String, dynamic> file,
-    Map<String, String>? header, {
-    String? pathVariable,
-  });
-  Future<Either<NetworkFailure, dynamic>> patchFile(
-    String url,
-    Map<String, dynamic> data,
-    Map<String, dynamic> file,
-    Map<String, String>? header, {
-    String? pathVariable,
-  });
-  Future<Either<NetworkFailure, dynamic>> putFile(
-    String url,
-    Map<String, dynamic> data,
-    Map<String, dynamic> file,
-    Map<String, String>? header, {
-    String? pathVariable,
+    AuthType? authType,
   });
 
-  Future<Either<NetworkFailure, dynamic>> delete(
+  Future<Either<NetworkFailure, NetworkResponse<dynamic>>> post(
+    String url,
+    Map<String, dynamic> data,
+    Map<String, String>? header, {
+    Map<String, dynamic>? query,
+    String? pathVariable,
+    AuthType? authType,
+  });
+
+  Future<Either<NetworkFailure, NetworkResponse<dynamic>>> patch(
+    String url,
+    Map<String, dynamic> data,
+    Map<String, String>? header, {
+    Map<String, dynamic>? query,
+    String? pathVariable,
+    AuthType? authType,
+  });
+
+  Future<Either<NetworkFailure, NetworkResponse<dynamic>>> put(
+    String url,
+    Map<String, dynamic> data,
+    Map<String, String>? header, {
+    Map<String, dynamic>? query,
+    String? pathVariable,
+    AuthType? authType,
+  });
+
+  Future<Either<NetworkFailure, NetworkResponse<dynamic>>> postFile(
+    String url,
+    Map<String, dynamic> data,
+    Map<String, dynamic> file,
+    Map<String, String>? header, {
+    Map<String, dynamic>? query,
+    String? pathVariable,
+    AuthType? authType,
+  });
+
+  Future<Either<NetworkFailure, NetworkResponse<dynamic>>> patchFile(
+    String url,
+    Map<String, dynamic> data,
+    Map<String, dynamic> file,
+    Map<String, String>? header, {
+    Map<String, dynamic>? query,
+    String? pathVariable,
+    AuthType? authType,
+  });
+
+  Future<Either<NetworkFailure, NetworkResponse<dynamic>>> putFile(
+    String url,
+    Map<String, dynamic> data,
+    Map<String, dynamic> file,
+    Map<String, String>? header, {
+    Map<String, dynamic>? query,
+    String? pathVariable,
+    AuthType? authType,
+  });
+
+  Future<Either<NetworkFailure, NetworkResponse<dynamic>>> putBinary(
+    String url,
+    String filePath,
+    Map<String, String>? header, {
+    Map<String, dynamic>? query,
+    String? pathVariable,
+    AuthType? authType,
+  });
+
+  Future<Either<NetworkFailure, NetworkResponse<dynamic>>> delete(
     String url,
     Map<String, String>? header, {
     Map<String, dynamic>? query,
     String? pathVariable,
+    AuthType? authType,
   });
 }

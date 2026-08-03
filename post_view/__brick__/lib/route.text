@@ -1,0 +1,3 @@
+import 'package:{{app.snakeCase()}}/modules/{{module.snakeCase()}}/presentation/routes/{{name.snakeCase()}}_route.dart';
+
+  {{name.pascalCase()}}Route.route,
