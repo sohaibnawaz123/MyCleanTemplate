@@ -5,6 +5,6 @@ bricks:
   get_view:
     path: MyCleanTemplate/get_view
   post_view:
-    path: MyCleanTemplate/get_view
+    path: MyCleanTemplate/post_view
   boiler_code:
     path: MyCleanTemplate/boiler_code
