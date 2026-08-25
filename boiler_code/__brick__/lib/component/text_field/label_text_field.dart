@@ -19,7 +19,7 @@ class LabelTextField extends StatefulWidget {
     this.onChanged,
     this.onTap,
     this.readOnly = false,
-    this.labelText = 'Text Form',
+    this.labelText,
     this.helperText,
     this.errorText,
     this.hintText = 'Input Text Here',
@@ -59,7 +59,7 @@ class LabelTextField extends StatefulWidget {
   final ValueChanged<String>? onChanged;
   final VoidCallback? onTap;
   final bool readOnly;
-  final String labelText;
+  final String? labelText;
   final String? helperText;
   final String? errorText;
   final String hintText;
@@ -236,17 +236,20 @@ class _LabelTextFieldState extends State<LabelTextField> {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-        Content(
-          data: widget.labelText,
-          textStyle:
-              widget.labelStyle ??
-              context.lableText.copyWith(
-                color: AppColor.primaryText,
-                fontWeight: AppFontWeight.semiBold,
-              ),
-          size: 14,
-        ),
-        SizedBox(height: 8.h),
+        if (hasLabel) ...[
+          Content(
+            data: labelText!,
+            textStyle:
+                widget.labelStyle ??
+                context.bodyText.copyWith(
+                  color: AppColor.primaryText,
+                  fontWeight: AppFontWeight.semiBold,
+                ),
+            size: 14,
+          ),
+          SizedBox(height: 8.h),
+        ],
+        // SizedBox(height: 8.h),
         TextFormField(
           cursorHeight: 20,
           keyboardAppearance: Brightness.light,
