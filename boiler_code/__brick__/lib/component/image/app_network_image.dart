@@ -17,7 +17,7 @@ class AppNetworkImage extends StatelessWidget {
   final double size;
   final BoxFit fit;
   final Color? errorBgColor;
-  final ShapeBorder shape;
+  final ShapeBorder? shape;
   final double? borderRadius;
   final String? defaultImage;
   final Widget? placeholder;
@@ -28,7 +28,7 @@ class AppNetworkImage extends StatelessWidget {
     this.size = 38.0,
     this.fit = BoxFit.cover,
     this.errorBgColor = AppColor.highlight,
-    this.shape = const CircleBorder(),
+    this.shape,
     this.borderRadius,
     this.defaultImage,
     this.placeholder,
@@ -76,7 +76,7 @@ class AppImage extends StatelessWidget {
   final String localImage;
   final double size;
   final BoxFit fit;
-  final ShapeBorder shape;
+  final ShapeBorder? shape;
   final double? borderRadius;
   final String? defaultImage;
   final Widget? placeholder;
@@ -91,7 +91,7 @@ class AppImage extends StatelessWidget {
     this.localImage = '',
     this.size = 38.0,
     this.fit = BoxFit.cover,
-    this.shape = const CircleBorder(),
+    this.shape,
     this.borderRadius,
     this.defaultImage,
     this.placeholder,
@@ -105,7 +105,7 @@ class AppImage extends StatelessWidget {
     required String imageUrl,
     double size = 38.0,
     BoxFit fit = BoxFit.cover,
-    ShapeBorder shape = const CircleBorder(),
+    ShapeBorder? shape,
     double? borderRadius,
     String? defaultImage,
     Widget? placeholder,
@@ -132,7 +132,7 @@ class AppImage extends StatelessWidget {
     required String assetPath,
     double size = 38.0,
     BoxFit fit = BoxFit.cover,
-    ShapeBorder shape = const CircleBorder(),
+    ShapeBorder? shape,
     double? borderRadius,
     String? defaultImage,
     Widget? placeholder,
@@ -158,7 +158,7 @@ class AppImage extends StatelessWidget {
     required String svgPath,
     double size = 38.0,
     BoxFit fit = BoxFit.contain,
-    ShapeBorder shape = const CircleBorder(),
+    ShapeBorder? shape,
     double? borderRadius,
     String? defaultImage,
     Widget? placeholder,
@@ -186,7 +186,7 @@ class AppImage extends StatelessWidget {
     required String filePath,
     double size = 38.0,
     BoxFit fit = BoxFit.cover,
-    ShapeBorder shape = const CircleBorder(),
+    ShapeBorder? shape,
     double? borderRadius,
     String? defaultImage,
     Widget? placeholder,
@@ -213,7 +213,7 @@ class AppImage extends StatelessWidget {
     this.localImage = '',
     this.size = 38.0,
     this.fit = BoxFit.cover,
-    this.shape = const CircleBorder(),
+    this.shape,
     this.borderRadius,
     this.defaultImage,
     this.placeholder,
@@ -320,23 +320,30 @@ bool _isAssetPath(String path) {
 
 Widget _imageContainer({
   required Color? color,
-  required ShapeBorder shape,
+  required ShapeBorder? shape,
   required double size,
   Widget? child,
 }) {
   return Container(
     height: size,
     width: size,
-    decoration: ShapeDecoration(color: color, shape: shape),
+    decoration: ShapeDecoration(
+      color: color,
+      shape: shape ?? const RoundedRectangleBorder(),
+    ),
     child: child,
   );
 }
 
 Widget _clipImage({
-  required ShapeBorder shape,
+  required ShapeBorder? shape,
   required double? borderRadius,
   required Widget child,
 }) {
+  if (shape == null) {
+    return child;
+  }
+
   if (shape is RoundedRectangleBorder) {
     final borderRadiusValue =
         borderRadius ?? shape.borderRadius.resolve(TextDirection.ltr).topLeft.x;
