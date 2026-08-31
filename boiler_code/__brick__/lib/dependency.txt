@@ -6,6 +6,8 @@
   fluttertoast: ^9.0.0
   bloc: ^9.1.0
   flutter_screenutil: ^5.9.3
+  flutter_localizations:
+    sdk: flutter
   google_fonts: ^6.3.3
   flutter_svg: ^2.2.3
   dropdown_button2: ^2.3.9
@@ -15,3 +17,6 @@
   go_router: ^14.8.1
   equatable: ^2.0.8
   image_picker: ^1.2.3
+
+# Add this under flutter assets in pubspec.yaml:
+#   - assets/l10n/

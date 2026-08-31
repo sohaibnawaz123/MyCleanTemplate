@@ -1,4 +1,27 @@
-// part of 'app_bloc.dart';
+part of 'app_bloc.dart';
+
+class AppState {
+  final Locale local;
+
+  const AppState({
+    this.local = const Locale('en'),
+  });
+
+  AppState copyWith({
+    Locale? local,
+  }) {
+    final data = AppState(
+      local: local ?? this.local,
+    );
+    Utils.logInfo(data.toString(), name: 'App State');
+    return data;
+  }
+
+  @override
+  String toString() {
+    return 'AppState(${local.toString()})';
+  }
+}
 
 // @immutable
 // class AppState {
@@ -9,7 +32,7 @@
 //   final String fcm;
 //   // final SocketResponse<io.Socket>? socket;
 //   final SocketStatus? socketStatus;
-
+//
 //   const AppState({
 //     required this.user,
 //     required this.credentials,
@@ -19,7 +42,7 @@
 //     // this.socket,
 //     this.socketStatus,
 //   });
-
+//
 //   AppState copyWith({
 //     AuthUserDataEntity? user,
 //     CredentialsEntity? credentials,
@@ -41,7 +64,7 @@
 //     Utils.logInfo(data.toString(), name: "App State");
 //     return data;
 //   }
-
+//
 //   @override
 //   String toString() {
 //     return 'AppState(${user.toString()}, credential: ${credentials.toString()}, lovResponse: ${lovResponse.toString()}, lovData: ${lovData.toString()}, fcm: ${fcm.toString()}, socketStatus: ${socketStatus.toString()})';
