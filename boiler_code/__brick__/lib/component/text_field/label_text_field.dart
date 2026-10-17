@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:{{name.snakeCase()}}/component/text/content.dart';
+import 'package:{{name.snakeCase()}}/core/utils/extension/app_font_weight.dart';
 import 'package:{{name.snakeCase()}}/core/resource/app_asset.dart';
 import 'package:{{name.snakeCase()}}/core/resource/app_color.dart';
 import 'package:{{name.snakeCase()}}/core/resource/app_style.dart';
@@ -109,6 +111,7 @@ class _LabelTextFieldState extends State<LabelTextField> {
     _obscureText = widget.obscureText;
     _focusNode = widget.focusNode ?? FocusNode();
     _focusNode.addListener(_handleFocusChange);
+    _isFilled = _currentText.isNotEmpty;
     if (widget.controller != null) {
       _isFilled = widget.controller!.text.isNotEmpty;
       widget.controller!.addListener(_handleTextChange);
@@ -231,6 +234,7 @@ class _LabelTextFieldState extends State<LabelTextField> {
     Color iconColor =
         widget.iconColor ??
         _iconColor(hasError, isDisabled, isSuccess, isTyping);
+    final hasLabel = widget.labelText?.trim().isNotEmpty ?? false;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -238,7 +242,7 @@ class _LabelTextFieldState extends State<LabelTextField> {
       children: [
         if (hasLabel) ...[
           Content(
-            data: labelText!,
+            data: widget.labelText!,
             textStyle:
                 widget.labelStyle ??
                 context.bodyText.copyWith(
@@ -255,7 +259,7 @@ class _LabelTextFieldState extends State<LabelTextField> {
           keyboardAppearance: Brightness.light,
           obscuringCharacter: '*',
           enabled: widget.enabled,
-          initialValue: widget.initialValue,
+          initialValue: widget.controller == null ? widget.initialValue : null,
           obscureText: _obscureText,
           inputFormatters: widget.inputFormatters,
           onTapOutside:
@@ -332,7 +336,7 @@ class _LabelTextFieldState extends State<LabelTextField> {
             data: helperText,
             textStyle:
                 (hasError ? widget.errorStyle : widget.helperStyle) ??
-                context.errorText.copyWith(color: helperColor, fontSize: 12),
+                context.bodyText.copyWith(color: helperColor, fontSize: 12),
             size: 12,
           ),
         ],

@@ -14,6 +14,7 @@ class AppColor {
   static const Color base = Color(0xFFF5F5F5);
 
   static const Color primary = Color(0xFFF5F5F5);
+  static const Color success = Color(0xFF4CAF50);
   static const Color grey = Color(0xFFF5F5F5);
   static const Color highlight = grey;
   static Color? get highlightdark => null;
